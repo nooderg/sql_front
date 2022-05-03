@@ -4,7 +4,7 @@ import Vue from "vue";
 export default {
   install() {
     Vue.prototype.$http = axios.create({
-      baseURL: `https://slk-pag.herokuapp.com/`,
+      baseURL: `https://sqlminiproj.herokuapp.com/`,
       headers: {
         "Content-Type": "application/json"
       }
