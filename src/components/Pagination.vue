@@ -49,8 +49,8 @@
         <thead>
           <tr>
             <th class="text-left">title</th>
-            <th class="text-left">rental</th>
             <th class="text-left">category</th>
+            <th class="text-left">rental</th>
           </tr>
         </thead>
         <tbody>
@@ -87,18 +87,18 @@ export default {
       },
       {
         key: "rental",
-        value: "Rentals"
+        value: "Nombre de locations"
       }
     ],
     current_sort: "title",
     directions: [
       {
         key: "asc",
-        value: "Up"
+        value: "Ascendant"
       },
       {
         key: "desc",
-        value: "Down"
+        value: "Descendant"
       }
     ],
     current_direction: "asc",
