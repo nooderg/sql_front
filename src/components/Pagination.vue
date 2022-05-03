@@ -22,21 +22,27 @@
           :value="direction.key"
         ></v-radio>
       </v-radio-group>
-      <v-text-field
-        v-model="currentPage"
-        hide-details
-        single-line
-        type="number"
-        @input="page => changePage(page)"
-      />
+      <div>
+        <h2>Page:</h2>
+        <v-text-field
+          v-model="currentPage"
+          hide-details
+          single-line
+          type="number"
+          @input="page => changePage(page)"
+        />
+      </div>
+      <div>
+        <h2>Movies per pages:</h2>
+        <v-text-field
+          v-model="currentNumberOfPage"
+          hide-details
+          single-line
+          type="number"
+          @input="page => changeNumberOfPage(page)"
+        />
+      </div>
     </div>
-
-    <!-- <v-data-table
-      :headers="headers"
-      :items="movies"
-      :items-per-page="15"
-      class="elevation-1"
-    ></v-data-table> -->
 
     <v-simple-table>
       <template v-slot:default>
@@ -65,40 +71,41 @@ export default {
 
   data: () => ({
     headers: [
-      { text: "Titre", value: "title" },
-      { text: "Catégorie", value: "category" },
-      { text: "Nombre de locations", value: "total_rental" }
+      { text: "Title", value: "title" },
+      { text: "Genre", value: "category" },
+      { text: "Rentals", value: "total_rental" }
     ],
     movies: [],
     order_by: [
       {
         key: "title",
-        value: "Titre"
+        value: "Title"
       },
       {
         key: "category",
-        value: "Catégorie"
+        value: "Genre"
       },
       {
         key: "rental",
-        value: "Nombre de locations"
+        value: "Rentals"
       }
     ],
     current_sort: "title",
     directions: [
       {
         key: "asc",
-        value: "Ascendant"
+        value: "Up"
       },
       {
         key: "desc",
-        value: "Descendant"
+        value: "Down"
       }
     ],
     current_direction: "asc",
     radioSort: 1,
     radioAsc: 1,
-    currentPage: 1
+    currentPage: 1,
+    currentNumberOfPage: 10
   }),
   methods: {
     setSort(sort) {
@@ -120,7 +127,7 @@ export default {
         .get("/movies", {
           params: {
             limit: 10,
-            offset: this.currentPage * 10,
+            offset: this.currentPage * this.currentNumberOfPage,
             order_by: this.current_sort,
             asc: this.current_direction
           }
@@ -135,8 +142,21 @@ export default {
       this.$http
         .get("/movies", {
           params: {
-            limit: 10,
-            offset: this.currentPage * 10,
+            limit: this.currentNumberOfPage,
+            offset: this.currentPage * this.currentNumberOfPage,
+            order_by: this.current_sort,
+            asc: this.current_asc
+          }
+        })
+        .then(res => (this.movies = res.data));
+    },
+    changeNumberOfPage(number) {
+      this.currentNumberOfPage = number;
+      this.$http
+        .get("/movies", {
+          params: {
+            limit: this.currentNumberOfPage,
+            offset: this.currentPage * this.currentNumberOfPage,
             order_by: this.current_sort,
             asc: this.current_asc
           }
@@ -148,8 +168,8 @@ export default {
     this.$http
       .get("/movies", {
         params: {
-          limit: 10,
-          offset: this.currentPage * 10,
+          limit: this.currentNumberOfPage,
+          offset: this.currentPage * this.currentNumberOfPage,
           order_by: this.current_sort,
           asc: this.current_asc
         }
@@ -164,6 +184,8 @@ export default {
 <style lang="scss" scoped>
 .sorts {
   display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.1);
   & > * {
     margin: 10px;
   }
